@@ -1,11 +1,10 @@
 import java.io.Serializable;
 
 public class Packet implements Serializable {
-    public Boolean success;
-    public String message;
+    public Object message;
 
-    public Packet(Boolean success, String message) {
-        this.success = false;
+    public Packet(Object message) {
+
         this.message = message;
     }
 }
