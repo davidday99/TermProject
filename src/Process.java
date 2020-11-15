@@ -3,20 +3,30 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Process implements ProcessRMI, Runnable {
 
     public String[] peers;
     public int[] ports;
     public int me;
+    public int s;
+
+    ReentrantLock mutex;
+
+    public int G_me;
+    public int[][] w;
 
     Registry registry;
     ProcessRMI stub;
 
-    Process(String[] peers, int[] ports, int me) {
+    Process(String[] peers, int[] ports, int me, int[][] w, int s) {
         this.peers = peers;
         this.ports = ports;
         this.me = me;
+        this.s = s;
+        this.G_me = (me == s) ? 0 : Integer.MAX_VALUE;
+        this.w = w;
 
         try{
             System.setProperty("java.rmi.server.hostname", this.peers[this.me]);
@@ -57,44 +67,61 @@ public class Process implements ProcessRMI, Runnable {
     public void run() {
         int n = 0;
 
-        int[] nums = new int[20];
-        int[] results = new int[5];
-
-        for (int i = 0; i < 20; i++) {
-            nums[i] = i;
+        int ret = -1;
+        while ((ret = forbidden(me)) != -1) {
+            advance(ret);
         }
-
-        while (n < peers.length) {
-            Packet p;
-            int count = 0;
-            for (int i = 0; i < peers.length; i++) {
-
-                int[] copy = Arrays.copyOfRange(nums, count, count + 4);
-                count += 4;
-
-                p = Call("Send", new Packet(copy), i);
-                if (p != null) {
-                    System.out.println((int) p.message);
-                    results[i] = (int) p.message;
-                    n++;
-                }
-            }
-        }
-        int sum = 0;
-        for (int result : results) {
-            sum += result;
-        }
-        System.out.println(sum);
-        System.exit(0);
     }
 
     public Packet Send(Packet p) {
-        int sum = 0;
-        int[] arr = (int[]) p.message;
-        for (int i = 0; i < 4; i++) {
-            sum += arr[i];
+        if (p.message.equals("G_i")) {
+            return new Packet(G_me);
         }
-        p.message = sum;
-        return p;
+        return null;
+    }
+
+    public int forbidden(int j) {
+        boolean[] pre = pre(j);
+        int min = Integer.MAX_VALUE;
+
+        for (int i = 0; i < pre.length; i++) {
+            if (pre[i]) {
+                Packet p = Call("Send", new Packet("G_i"), i);
+                int G_i = (int) p.message;
+                int temp = G_i;
+                if (temp + w[i][j] > temp) temp += w[i][j];
+                min = Math.min(min, temp);
+            }
+            if (G_me > min) {
+                return min;
+            }
+        }
+        return -1;
+    }
+
+    public void advance(int min) {
+        G_me = min;
+    }
+
+    private boolean[] pre(int j) {
+        boolean[] pre = new boolean[peers.length];
+        Arrays.fill(pre, false);
+
+        for (int i = 0; i < peers.length; i++) {
+            if (w[i][j] >= 0) {
+                pre[i] = true;
+            }
+        }
+        return pre;
+    }
+
+    public void Kill(){
+        if(this.registry != null){
+            try {
+                UnicastRemoteObject.unexportObject(this.registry, true);
+            } catch(Exception e){
+                System.out.println("None reference");
+            }
+        }
     }
 }
