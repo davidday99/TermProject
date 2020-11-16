@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 
 public class ShortestPathTest {
-    static String[] filePaths = {"matrix.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"matrix.txt", "matrix1.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 
     @BeforeClass
