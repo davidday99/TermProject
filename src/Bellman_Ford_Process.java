@@ -13,7 +13,7 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
 
     ReentrantLock mutex;
 
-    public int G_me;
+    public int[] G;
     public int[][] w;
 
     Registry registry;
@@ -24,7 +24,9 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         this.ports = ports;
         this.me = me;
         this.s = s;
-        this.G_me = (me == s) ? 0 : Integer.MAX_VALUE;
+        G = new int[w.length];
+        Arrays.fill(this.G, Integer.MAX_VALUE);
+        G[s] = 0;
         this.w = w;
 
         try{
@@ -67,16 +69,45 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         int n = 0;
 
         int ret = -1;
-        while ((ret = forbidden(me)) != -1) {
-            advance(ret);
+//        while ((ret = forbidden(me)) != -1) {
+//            advance(ret);
+//        }
+        while(!evalPredicate()) {
+            ret = forbidden(me);
+            if(ret != -1) {
+                advance(ret);
+            }
         }
     }
 
     public Packet Send(Packet p) {
         if (p.message.equals("G_i")) {
-            return new Packet(G_me);
+            return new Packet(G[me]);
         }
         return null;
+    }
+
+    public boolean evalPredicate() {
+        int n = w.length;
+        for(int i = 0; i<n; i++) {
+            Packet p = Call("Send", new Packet("G_i"), i);
+            G[i] = (int) p.message;
+        }
+        for(int j = 0; j<n; j++) {
+            boolean[] pre = pre(j);
+            int min = Integer.MAX_VALUE;
+            for(int i = 0; i<pre.length; i++) {
+                if (pre[i]) {
+                    int temp = G[i];
+                    if (temp + w[i][j] > temp) temp += w[i][j];
+                    min = Math.min(min, temp);
+                }
+            }
+            if(G[j] > min) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int forbidden(int j) {
@@ -85,13 +116,11 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
 
         for (int i = 0; i < pre.length; i++) {
             if (pre[i]) {
-                Packet p = Call("Send", new Packet("G_i"), i);
-                int G_i = (int) p.message;
-                int temp = G_i;
+                int temp = G[i];
                 if (temp + w[i][j] > temp) temp += w[i][j];
                 min = Math.min(min, temp);
             }
-            if (G_me > min) {
+            if (G[me] > min) {
                 return min;
             }
         }
@@ -99,7 +128,7 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
     }
 
     public void advance(int min) {
-        G_me = min;
+        G[me] = min;
     }
 
     private boolean[] pre(int j) {

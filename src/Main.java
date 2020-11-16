@@ -56,7 +56,7 @@ public class Main {
         }
 
         for (Bellman_Ford_Process p : proc) {
-            System.out.println("d(" + source + "," + p.me + ") = " + p.G_me);
+            System.out.println("d(" + source + "," + p.me + ") = " + p.G[p.me]);
         }
 
         cleanup(proc);
