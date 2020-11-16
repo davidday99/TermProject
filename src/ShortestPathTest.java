@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Date;
 
 public class ShortestPathTest {
     static String[] filePaths = {"matrix.txt", "matrix1.txt", "matrix2.txt"}; // represents filepaths to all matriies to be test
@@ -47,7 +48,7 @@ public class ShortestPathTest {
         }
     }
 
-    private int[] distributed_bellman_ford_shortest_path(Matrix w, int source) {
+    public int[] distributed_bellman_ford_shortest_path(Matrix w, int source) {
         int n = w.rows;
 
         String host = "127.0.0.1";
@@ -66,6 +67,7 @@ public class ShortestPathTest {
 
         Thread[] threads = new Thread[n];
 
+        long start = System.nanoTime();
         for (int i= 0; i < n; i++) {
             threads[i] = new Thread(proc[i]);
             threads[i].start();
@@ -78,6 +80,11 @@ public class ShortestPathTest {
                 e.printStackTrace();
             }
         }
+        long end = System.nanoTime();
+
+        double elapsed = (end - start) / 1000000.0;
+
+        System.out.println("ELAPSED TIME: " + elapsed);
 
         cleanup(proc);
 
@@ -110,7 +117,7 @@ public class ShortestPathTest {
     // Function that implements Dijkstra's single source shortest path
     // algorithm for a graph represented using adjacency matrix
     // representation
-    private int[] dijkstra(int graph[][], int src, int V)
+    public int[] dijkstra(int graph[][], int src, int V)
     {
         int dist[] = new int[V]; // The output array. dist[i] will hold
         // the shortest distance from src to i
