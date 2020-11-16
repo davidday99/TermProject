@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 public class ShortestPathTest {
-    static String[] filePaths = {"matrix.txt", "matrix1.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"matrix.txt", "matrix1.txt", "matrix2.txt"}; // represents filepaths to all matriies to be test
     //static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 
@@ -32,8 +32,8 @@ public class ShortestPathTest {
             if(currMatrix != null) {
                 int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
                 int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
-//                System.out.println(Arrays.toString(expected));
-//                System.out.println(Arrays.toString(actual));
+                System.out.println(Arrays.toString(expected));
+                System.out.println(Arrays.toString(actual));
                 Assert.assertArrayEquals(expected, actual);
             }
         }
