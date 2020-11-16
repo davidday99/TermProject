@@ -5,7 +5,7 @@ import java.rmi.registry.Registry;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Process implements ProcessRMI, Runnable {
+public class Bellman_Ford_Process implements ProcessRMI, Runnable {
 
     public String[] peers;
     public int[] ports;
@@ -20,7 +20,7 @@ public class Process implements ProcessRMI, Runnable {
     Registry registry;
     ProcessRMI stub;
 
-    Process(String[] peers, int[] ports, int me, int[][] w, int s) {
+    Bellman_Ford_Process(String[] peers, int[] ports, int me, int[][] w, int s) {
         this.peers = peers;
         this.ports = ports;
         this.me = me;
