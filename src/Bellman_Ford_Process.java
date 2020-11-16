@@ -9,9 +9,7 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
     public String[] peers;
     public int[] ports;
     public int me;
-    public int s;
-
-    ReentrantLock mutex;
+    public int s;  // source node
 
     public int[] G;
     public int[][] w;
@@ -19,7 +17,7 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
     Registry registry;
     ProcessRMI stub;
 
-    Bellman_Ford_Process(String[] peers, int[] ports, int me, int[][] w, int s) {
+    public Bellman_Ford_Process(String[] peers, int[] ports, int me, int[][] w, int s) {
         this.peers = peers;
         this.ports = ports;
         this.me = me;
@@ -39,6 +37,13 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         }
     }
 
+    /**
+     * Wrapper method for handling RMI
+     * @param rmi RMI handler to envoke
+     * @param p request packet
+     * @param id process to which RMI should be made
+     * @return response packet
+     */
     public Packet Call(String rmi, Packet p, int id){
         Packet callReply = null;
 
@@ -48,9 +53,6 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
             stub = (ProcessRMI) registry.lookup("Process");
             if(rmi.equals("Send"))
                 callReply = stub.Send(p);
-            else if(rmi.equals("Receive"))
-                //callReply = stub.Receive();
-                System.out.println("no receive");
             else
                 System.out.println("Wrong parameters!");
         } catch(Exception e){
@@ -59,27 +61,26 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         return callReply;
     }
 
-    public void Start() {
-        Thread t = new Thread(this);
-        t.start();
-    }
-
+    /**
+     * Once started, process will continue to run until
+     * the lattice-linear predicate is true for all processes
+     */
     @Override
     public void run() {
-        int n = 0;
-
-        int ret = -1;
-//        while ((ret = forbidden(me)) != -1) {
-//            advance(ret);
-//        }
+        int ret;
         while(!evalPredicate()) {
             ret = forbidden(me);
-            if(ret != -1) {
+            if(ret != -1) {  // if ret != -1 process is in a forbidden state and must advance
                 advance(ret);
             }
         }
     }
 
+    /**
+     * RMI handler for simulating requests/responses between processes
+     * @param p request packet
+     * @return response packet
+     */
     public Packet Send(Packet p) {
         if (p.message.equals("G_i")) {
             return new Packet(G[me]);
@@ -87,12 +88,19 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         return null;
     }
 
+    /**
+     * Compute whether the respective lattice-linear predicate is true for all processes
+     * @return true if predicate true for all processes, else false
+     */
     public boolean evalPredicate() {
         int n = w.length;
+
+        // get up-to-date G[i] for all processes i
         for(int i = 0; i<n; i++) {
             Packet p = Call("Send", new Packet("G_i"), i);
             G[i] = (int) p.message;
         }
+
         for(int j = 0; j<n; j++) {
             boolean[] pre = pre(j);
             int min = Integer.MAX_VALUE;
@@ -110,6 +118,11 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         return true;
     }
 
+    /**
+     * Determine if process j is in a forbidden state using the respective lattice-linear predicate
+     * @param j process on which to compute
+     * @return minimum value of G[i] + w[i,j] over all i in pre(j) if forbidden(j), else -1
+     */
     public int forbidden(int j) {
         boolean[] pre = pre(j);
         int min = Integer.MAX_VALUE;
@@ -127,10 +140,19 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         return -1;
     }
 
+    /**
+     * Advance on current state if it is forbidden
+     * @param min value to which this process should advance
+     */
     public void advance(int min) {
         G[me] = min;
     }
 
+    /**
+     * Compute all nodes i for which (i,j) is an edge in the directed graph
+     * @param j node on which to compute
+     * @return boolean array, if (i,j) is in the graph then element i true, else false
+     */
     private boolean[] pre(int j) {
         boolean[] pre = new boolean[peers.length];
         Arrays.fill(pre, false);
@@ -143,6 +165,9 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         return pre;
     }
 
+    /**
+     * Used for RMI cleanup
+     */
     public void Kill(){
         if(this.registry != null){
             try {

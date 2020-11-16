@@ -40,6 +40,6 @@ public class Bellman_Ford_Process_Perf {
        int[] vals = s.distributed_bellman_ford_shortest_path(m, 0);
        System.out.println(Arrays.toString(vals));
 
-       //System.exit(0);
+       System.exit(0);
     }
 }
