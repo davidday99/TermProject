@@ -108,7 +108,7 @@ public class Process implements ProcessRMI, Runnable {
         Arrays.fill(pre, false);
 
         for (int i = 0; i < peers.length; i++) {
-            if (w[i][j] >= 0) {
+            if (w[i][j] > 0) {
                 pre[i] = true;
             }
         }

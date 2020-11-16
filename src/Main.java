@@ -5,16 +5,9 @@ import java.util.Scanner;
 import java.util.function.Predicate;
 
 public class Main {
-    private static class Matrix {
-        public int[][] matrix;
-        public int rows;
-        public int cols;
-        public Matrix(int[][] matrix, int rows, int cols) {
-            this.matrix = matrix;
-            this.rows = rows;
-            this.cols = cols;
-        }
-    }
+//    private static class Matrix {
+//
+//    }
 
     private static void cleanup(Process[] pxa){
         for(int i = 0; i < pxa.length; i++){
@@ -24,33 +17,10 @@ public class Main {
         }
     }
 
-    /**
-     * format of file must be
-     * line1: # rows
-     * line2: # cols
-     * rest of lines: matrix according to # rows and # cols with each integer being space separated
-     * @param filePath
-     * @return int[][] representing the matrix contained in the file
-     * @throws FileNotFoundException
-     */
-    private static Matrix parseAdjacencyMatrix(String filePath) throws FileNotFoundException {
-        File file = new File(filePath);
-        Scanner in = new Scanner(file);
-        int rows = in.nextInt(), cols = in.nextInt();
-        int[][] matrix = new int[rows][cols];
-        for(int i = 0; i<rows; i++) {
-            for(int j = 0; j<cols; j++) {
-                matrix[i][j] = in.nextInt();
-            }
-        }
-        return new Matrix(matrix, rows, cols);
-    }
-
-
     public static void main(String[] args) {
         Matrix w = null;
         try {
-            w = parseAdjacencyMatrix("matrix.txt");
+            w = Matrix.parseAdjacencyMatrix("matrix.txt");
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
