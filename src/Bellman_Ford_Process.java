@@ -120,9 +120,9 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
                 if (temp + w[i][j] > temp) temp += w[i][j];
                 min = Math.min(min, temp);
             }
-            if (G[me] > min) {
-                return min;
-            }
+        }
+        if (G[me] > min) {
+            return min;
         }
         return -1;
     }
