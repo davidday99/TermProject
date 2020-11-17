@@ -42,7 +42,7 @@ public class Dijkstra_Sequential_Perf {
         double elapsed = (end - start) / 1000000.0;
 
         System.out.println("ELAPSED TIME: " + elapsed);
-        
+
         System.out.println(Arrays.toString(vals));
 
         try {
