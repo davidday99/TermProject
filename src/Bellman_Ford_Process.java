@@ -17,6 +17,8 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
     Registry registry;
     ProcessRMI stub;
 
+    public static int messages = 0;
+
     public Bellman_Ford_Process(String[] peers, int[] ports, int me, int[][] w, int s) {
         this.peers = peers;
         this.ports = ports;
@@ -83,6 +85,7 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
      */
     public Packet Send(Packet p) {
         if (p.message.equals("G_i")) {
+            messages++;
             return new Packet(G[me]);
         }
         return null;

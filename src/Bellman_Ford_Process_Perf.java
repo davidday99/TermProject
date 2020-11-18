@@ -37,7 +37,7 @@ public class Bellman_Ford_Process_Perf {
 
        Matrix m = new Matrix(mat, 100, 100);
 
-       int[] vals = s.distributed_bellman_ford_shortest_path(m, 0);
+       int[] vals = s.distributed_bellman_ford_shortest_path(matricies[0], 0);
        System.out.println(Arrays.toString(vals));
 
        System.exit(0);

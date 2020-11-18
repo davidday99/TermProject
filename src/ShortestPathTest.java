@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Random;
 
 public class ShortestPathTest {
     static String[] filePaths = {"matrix.txt", "matrix1.txt", "matrix2.txt"}; // represents filepaths to all matriies to be test
@@ -38,6 +39,19 @@ public class ShortestPathTest {
                 Assert.assertArrayEquals(expected, actual);
             }
         }
+        int[][] mat = new int[100][100];
+        Random random = new Random();
+
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                mat[i][j] = random.nextInt(99) + 1;
+            }
+        }
+        int[] actual = distributed_bellman_ford_shortest_path(new Matrix(mat, mat.length, mat.length), 0);
+        int[] expected = dijkstra(mat, 0, mat.length);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
      }
 
     private void cleanup(Bellman_Ford_Process[] pxa){
@@ -93,6 +107,7 @@ public class ShortestPathTest {
             Bellman_Ford_Process p = proc[i];
             distances[i] = p.G[p.me];
         }
+        System.out.println(Bellman_Ford_Process.messages);
 
         return distances;
     }
