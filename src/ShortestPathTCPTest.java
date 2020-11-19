@@ -78,6 +78,23 @@ public class ShortestPathTCPTest {
         Assert.assertArrayEquals(expected, actual);
     }
 
+    @Test
+    public void test_size_25_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("matrix3.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
     public void cleanup(TCPProcess[] proc) {
         for(TCPProcess p : proc) {
             p.closeSocket();
