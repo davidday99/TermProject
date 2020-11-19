@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Random;
 
 public class ShortestPathTCPTest {
-    static String[] filePaths = {"matrix.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"matrix2.txt"}; // represents filepaths to all matriies to be test
     //static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 
@@ -39,19 +39,19 @@ public class ShortestPathTCPTest {
                 Assert.assertArrayEquals(expected, actual);
             }
         }
-        int[][] mat = new int[100][100];
-        Random random = new Random();
-
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
-                mat[i][j] = random.nextInt(99) + 1;
-            }
-        }
-        int[] actual = distributed_bellman_ford_shortest_path(new Matrix(mat, mat.length, mat.length), 0);
-        int[] expected = dijkstra(mat, 0, mat.length);
-        System.out.println(Arrays.toString(expected));
-        System.out.println(Arrays.toString(actual));
-        Assert.assertArrayEquals(expected, actual);
+//        int[][] mat = new int[100][100];
+//        Random random = new Random();
+//
+//        for (int i = 0; i < 100; i++) {
+//            for (int j = 0; j < 100; j++) {
+//                mat[i][j] = random.nextInt(99) + 1;
+//            }
+//        }
+//        int[] actual = distributed_bellman_ford_shortest_path(new Matrix(mat, mat.length, mat.length), 0);
+//        int[] expected = dijkstra(mat, 0, mat.length);
+//        System.out.println(Arrays.toString(expected));
+//        System.out.println(Arrays.toString(actual));
+//        Assert.assertArrayEquals(expected, actual);
     }
 
     private void cleanup(Bellman_Ford_Process[] pxa){

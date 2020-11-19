@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Random;
 
 public class ShortestPathTest {
-    static String[] filePaths = {"matrix.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"matrix2.txt"}; // represents filepaths to all matriies to be test
     //static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 

@@ -30,6 +30,7 @@ public class TCPProcess implements Runnable{
 
         G = new int[w.length];
         Arrays.fill(this.G, Integer.MAX_VALUE);
+        G[source] = 0;
 
         try {
             this.server = new ServerSocket(port);
@@ -42,7 +43,6 @@ public class TCPProcess implements Runnable{
             while (true) {
                 try {
                     Socket peer = server.accept();
-                    System.out.println("connection established to " + peer.getInetAddress().getHostAddress());
 
                     Thread clientHandler = new Thread(() -> {
                         String sender = peer.getInetAddress().getHostAddress();
@@ -52,7 +52,10 @@ public class TCPProcess implements Runnable{
                             dataInputStream = new DataInputStream(peer.getInputStream());
 
                             while ((s = dataInputStream.readUTF()) != null) {
-                                System.out.println(sender + ": " + s);
+                                String[] nums = s.split(" ");
+                                int index = Integer.parseInt(nums[0]);
+                                int val = Integer.parseInt(nums[1]);
+                                G[index] = val;
                             }
 
                         } catch (Exception e) {
@@ -83,6 +86,7 @@ public class TCPProcess implements Runnable{
 
     public boolean send(Integer recipient, String s) {
         try {
+            //System.out.println("Sender: " + me + ", Recipient: " + recipient + ", message: " + s);
             this.peers.get(recipient).writeUTF(s);
             return true;
         } catch (Exception e) {
