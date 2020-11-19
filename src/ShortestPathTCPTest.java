@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
-public class ShortestPathTest {
+public class ShortestPathTCPTest {
     static String[] filePaths = {"matrix.txt"}; // represents filepaths to all matriies to be test
     //static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
@@ -52,7 +52,7 @@ public class ShortestPathTest {
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
-     }
+    }
 
     private void cleanup(Bellman_Ford_Process[] pxa){
         for(int i = 0; i < pxa.length; i++){
@@ -69,14 +69,22 @@ public class ShortestPathTest {
         String[] peers = new String[n];
         int[] ports = new int[n];
 
-        Bellman_Ford_Process[] proc = new Bellman_Ford_Process[n];
+        TCPProcess[] proc = new TCPProcess[n];
         for(int i = 0 ; i < n; i++){
             ports[i] = 1100+i;
             peers[i] = host;
         }
 
         for(int i = 0; i < n; i++){
-            proc[i] = new Bellman_Ford_Process(peers, ports, i, w.matrix, source);
+            proc[i] = new TCPProcess(host, ports[i], w.matrix, source, i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    proc[i].addPeer(host, j, ports[j]);
+                }
+            }
         }
 
         Thread[] threads = new Thread[n];
@@ -100,11 +108,10 @@ public class ShortestPathTest {
 
         System.out.println("ELAPSED TIME: " + elapsed);
 
-        cleanup(proc);
 
         int[] distances = new int[n];
         for(int i = 0; i<n; i++) {
-            Bellman_Ford_Process p = proc[i];
+            TCPProcess p = proc[i];
             distances[i] = p.G[p.me];
         }
         System.out.println(Bellman_Ford_Process.messages);

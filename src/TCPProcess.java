@@ -1,66 +1,94 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.server.UnicastRemoteObject;
-import java.rmi.registry.Registry;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Arrays;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.HashMap;
 
-public class Bellman_Ford_Process implements ProcessRMI, Runnable {
 
-    public String[] peers;
-    public int[] ports;
-    public int me;
-    public int s;  // source node
+public class TCPProcess implements Runnable{
+    String ip;
+    int port;
+    int me;
+
+    ServerSocket server;
+
+    HashMap<Integer, DataOutputStream> peers;
 
     public int[] G;
     public int[][] w;
+    int source;
 
-    Registry registry;
-    ProcessRMI stub;
+    public TCPProcess(String ip, int port, int[][] w, int source, int me) {
+        this.ip = ip;
+        this.port = port;
+        this.peers = new HashMap<>();
 
-    public static int messages = 0;
-
-    public Bellman_Ford_Process(String[] peers, int[] ports, int me, int[][] w, int s) {
-        this.peers = peers;
-        this.ports = ports;
+        this.w = w;
+        this.source = source;
         this.me = me;
-        this.s = s;
+
         G = new int[w.length];
         Arrays.fill(this.G, Integer.MAX_VALUE);
-        G[s] = 0;
-        this.w = w;
 
-        try{
-            System.setProperty("java.rmi.server.hostname", this.peers[this.me]);
-            registry = LocateRegistry.createRegistry(this.ports[this.me]);
-            stub = (ProcessRMI) UnicastRemoteObject.exportObject(this, this.ports[this.me]);
-            registry.rebind("Process", stub);
-        } catch(Exception e){
+        try {
+            this.server = new ServerSocket(port);
+
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        Thread connectionHandler = new Thread(() -> {
+            while (true) {
+                try {
+                    Socket peer = server.accept();
+                    System.out.println("connection established to " + peer.getInetAddress().getHostAddress());
+
+                    Thread clientHandler = new Thread(() -> {
+                        String sender = peer.getInetAddress().getHostAddress();
+                        String s;
+                        DataInputStream dataInputStream;
+                        try {
+                            dataInputStream = new DataInputStream(peer.getInputStream());
+
+                            while ((s = dataInputStream.readUTF()) != null) {
+                                System.out.println(sender + ": " + s);
+                            }
+
+                        } catch (Exception e) {
+                            System.out.println("Connection lost");
+                        }
+                    });
+
+                    clientHandler.start();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        connectionHandler.start();
+    }
+
+    public boolean addPeer(String ip, int processNum, int port) {
+        try {
+            this.peers.put((Integer) processNum, new DataOutputStream(new Socket(ip, port).getOutputStream()));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
-    /**
-     * Wrapper method for handling RMI
-     * @param rmi RMI handler to envoke
-     * @param p request packet
-     * @param id process to which RMI should be made
-     * @return response packet
-     */
-    public Packet Call(String rmi, Packet p, int id){
-        Packet callReply = null;
-
-        ProcessRMI stub;
-        try{
-            Registry registry = LocateRegistry.getRegistry(this.ports[id]);
-            stub = (ProcessRMI) registry.lookup("Process");
-            if(rmi.equals("Send"))
-                callReply = stub.Send(p);
-            else
-                System.out.println("Wrong parameters!");
-        } catch(Exception e){
-            return null;
+    public boolean send(Integer recipient, String s) {
+        try {
+            this.peers.get(recipient).writeUTF(s);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return callReply;
     }
 
     /**
@@ -79,29 +107,11 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
     }
 
     /**
-     * RMI handler for simulating requests/responses between processes
-     * @param p request packet
-     * @return response packet
-     */
-    public Packet Send(Packet p) {
-        if (p.message.equals("G_i")) {
-            return new Packet(G[me]);
-        }
-        return null;
-    }
-
-    /**
      * Compute whether the respective lattice-linear predicate is true for all processes
      * @return true if predicate true for all processes, else false
      */
     public boolean evalPredicate() {
         int n = w.length;
-
-        // get up-to-date G[i] for all processes i
-        for(int i = 0; i<n; i++) {
-            Packet p = Call("Send", new Packet("G_i"), i);
-            G[i] = (int) p.message;
-        }
 
         for(int j = 0; j<n; j++) {
             boolean[] pre = pre(j);
@@ -148,6 +158,11 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
      */
     public void advance(int min) {
         G[me] = min;
+        for (Integer peer : peers.keySet()) {
+            if (peer != me) {
+                send(peer, me + " " + G[me]);
+            }
+        }
     }
 
     /**
@@ -156,10 +171,10 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
      * @return boolean array, if (i,j) is in the graph then element i true, else false
      */
     private boolean[] pre(int j) {
-        boolean[] pre = new boolean[peers.length];
+        boolean[] pre = new boolean[w.length];
         Arrays.fill(pre, false);
 
-        for (int i = 0; i < peers.length; i++) {
+        for (int i = 0; i < w.length; i++) {
             if (w[i][j] > 0) {
                 pre[i] = true;
             }
@@ -167,16 +182,4 @@ public class Bellman_Ford_Process implements ProcessRMI, Runnable {
         return pre;
     }
 
-    /**
-     * Used for RMI cleanup
-     */
-    public void Kill(){
-        if(this.registry != null){
-            try {
-                UnicastRemoteObject.unexportObject(this.registry, true);
-            } catch(Exception e){
-                System.out.println("None reference");
-            }
-        }
-    }
 }
