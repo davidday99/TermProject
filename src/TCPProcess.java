@@ -72,21 +72,13 @@ public class TCPProcess implements Runnable{
                     clientHandler.start();
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    break;
+                    //e.printStackTrace();
                 }
             }
         });
 
         connectionHandler.start();
-    }
-
-    public void cleanup() {
-        try {
-            server.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean addPeer(String ip, int processNum, int port) {
@@ -110,6 +102,15 @@ public class TCPProcess implements Runnable{
         }
     }
 
+    public void closeSocket() {
+        try {
+            server.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Once started, process will continue to run until
      * the lattice-linear predicate is true for all processes
@@ -127,6 +128,8 @@ public class TCPProcess implements Runnable{
         if(ret != -1) {
             advance(ret);
         }
+
+        while(!evalPredicate()) {}
 
         //System.out.println("Process: " + me + ", G: " + Arrays.toString(G));
     }

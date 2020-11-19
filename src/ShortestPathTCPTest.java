@@ -28,37 +28,59 @@ public class ShortestPathTCPTest {
     }
 
     @Test
-    public void test_all_matricies_against_sequential_using_distributed_bellman_ford() {
-        for(int i = 0; i<matricies.length; i++) {
-            Matrix currMatrix = matricies[i];
-            if(currMatrix != null) {
-                int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-                int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
-                System.out.println(Arrays.toString(expected));
-                System.out.println(Arrays.toString(actual));
-                Assert.assertArrayEquals(expected, actual);
-            }
+    public void test_size_3_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("matrix.txt");
         }
-//        int[][] mat = new int[100][100];
-//        Random random = new Random();
-//
-//        for (int i = 0; i < 100; i++) {
-//            for (int j = 0; j < 100; j++) {
-//                mat[i][j] = random.nextInt(99) + 1;
-//            }
-//        }
-//        int[] actual = distributed_bellman_ford_shortest_path(new Matrix(mat, mat.length, mat.length), 0);
-//        int[] expected = dijkstra(mat, 0, mat.length);
-//        System.out.println(Arrays.toString(expected));
-//        System.out.println(Arrays.toString(actual));
-//        Assert.assertArrayEquals(expected, actual);
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
     }
 
-    private void cleanup(TCPProcess[] proc){
-        for(int i = 0; i < proc.length; i++){
-            if(proc[i] != null){
-                proc[i].cleanup();
-            }
+    @Test
+    public void test_size_9_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("matrix1.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_16_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("matrix2.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    public void cleanup(TCPProcess[] proc) {
+        for(TCPProcess p : proc) {
+            p.closeSocket();
         }
     }
 
@@ -115,7 +137,7 @@ public class ShortestPathTCPTest {
             distances[i] = p.G[p.me];
         }
 
-        //cleanup(proc);
+        cleanup(proc);
 
         return distances;
     }
