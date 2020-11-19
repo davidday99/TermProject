@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.Random;
 
 public class ShortestPathTCPTest {
-    static String[] filePaths = {"matrix2.txt"}; // represents filepaths to all matriies to be test
-    //static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
+    //static String[] filePaths = {"matrix.txt", "matrix1.txt", "matrix2.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 
     @BeforeClass
@@ -54,10 +54,10 @@ public class ShortestPathTCPTest {
 //        Assert.assertArrayEquals(expected, actual);
     }
 
-    private void cleanup(Bellman_Ford_Process[] pxa){
-        for(int i = 0; i < pxa.length; i++){
-            if(pxa[i] != null){
-                pxa[i].Kill();
+    private void cleanup(TCPProcess[] proc){
+        for(int i = 0; i < proc.length; i++){
+            if(proc[i] != null){
+                proc[i].cleanup();
             }
         }
     }
@@ -114,7 +114,8 @@ public class ShortestPathTCPTest {
             TCPProcess p = proc[i];
             distances[i] = p.G[p.me];
         }
-        System.out.println(Bellman_Ford_Process.messages);
+
+        //cleanup(proc);
 
         return distances;
     }

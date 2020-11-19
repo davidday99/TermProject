@@ -1,5 +1,6 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -40,7 +41,8 @@ public class TCPProcess implements Runnable{
         }
 
         Thread connectionHandler = new Thread(() -> {
-            while (true) {
+            int n = w.length;
+            for(int i = 0; i<n; i++) {
                 try {
                     Socket peer = server.accept();
 
@@ -56,6 +58,10 @@ public class TCPProcess implements Runnable{
                                 int index = Integer.parseInt(nums[0]);
                                 int val = Integer.parseInt(nums[1]);
                                 G[index] = val;
+                                int ret = forbidden(me);
+                                if(ret != -1) {
+                                    advance(ret);
+                                }
                             }
 
                         } catch (Exception e) {
@@ -72,6 +78,15 @@ public class TCPProcess implements Runnable{
         });
 
         connectionHandler.start();
+    }
+
+    public void cleanup() {
+        try {
+            server.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean addPeer(String ip, int processNum, int port) {
@@ -102,12 +117,18 @@ public class TCPProcess implements Runnable{
     @Override
     public void run() {
         int ret;
-        while(!evalPredicate()) {
-            ret = forbidden(me);
-            if(ret != -1) {  // if ret != -1 process is in a forbidden state and must advance
-                advance(ret);
-            }
+//        while(!evalPredicate()) {
+//            ret = forbidden(me);
+//            if(ret != -1) {  // if ret != -1 process is in a forbidden state and must advance
+//                advance(ret);
+//            }
+//        }
+        ret = forbidden(me);
+        if(ret != -1) {
+            advance(ret);
         }
+
+        //System.out.println("Process: " + me + ", G: " + Arrays.toString(G));
     }
 
     /**
