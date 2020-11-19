@@ -20,6 +20,8 @@ public class TCPProcess implements Runnable{
     public int[][] w;
     int source;
 
+    public static int messages; // for counting number of messages sent
+
     public TCPProcess(String ip, int port, int[][] w, int source, int me) {
         this.ip = ip;
         this.port = port;
@@ -95,6 +97,7 @@ public class TCPProcess implements Runnable{
         try {
             //System.out.println("Sender: " + me + ", Recipient: " + recipient + ", message: " + s);
             this.peers.get(recipient).writeUTF(s);
+            messages++;
             return true;
         } catch (Exception e) {
             e.printStackTrace();

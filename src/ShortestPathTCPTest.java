@@ -130,6 +130,8 @@ public class ShortestPathTCPTest {
 
         System.out.println("ELAPSED TIME: " + elapsed);
 
+        System.out.println("MESSAGES SENT: " + TCPProcess.messages);
+
 
         int[] distances = new int[n];
         for(int i = 0; i<n; i++) {
