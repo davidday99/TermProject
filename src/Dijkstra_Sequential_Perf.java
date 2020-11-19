@@ -3,8 +3,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Dijkstra_Sequential_Perf {
-    static String[] filePaths = {"matrix.txt", "matrix1.txt", "matrix2.txt"}; // represents filepaths to all matriies to be test
-    //static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"3_node_sparse.txt", "9_node_sparse.txt", "16_node_sparse.txt"}; // represents filepaths to all matriies to be test
+    //static String[] filePaths = {"9_node_sparse.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 
     public static void setup() {

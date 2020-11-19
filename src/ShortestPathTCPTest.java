@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.Random;
 
 public class ShortestPathTCPTest {
-    //static String[] filePaths = {"matrix.txt", "matrix1.txt", "matrix2.txt"}; // represents filepaths to all matriies to be test
-    static String[] filePaths = {"matrix1.txt"}; // represents filepaths to all matriies to be test
+    //static String[] filePaths = {"3_node_sparse.txt", "9_node_sparse.txt", "16_node_sparse.txt"}; // represents filepaths to all matriies to be test
+    static String[] filePaths = {"9_node_sparse.txt"}; // represents filepaths to all matriies to be test
     static Matrix[] matricies = null; // list of matricies to be tested
 
     @BeforeClass
@@ -28,10 +28,10 @@ public class ShortestPathTCPTest {
     }
 
     @Test
-    public void test_size_3_against_sequential_using_distributed_bellman_ford() {
+    public void test_size_3_sparse_against_sequential_using_distributed_bellman_ford() {
         Matrix currMatrix = null;
         try {
-            currMatrix = Matrix.parseAdjacencyMatrix("matrix.txt");
+            currMatrix = Matrix.parseAdjacencyMatrix("3_node_sparse.txt");
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
@@ -45,10 +45,10 @@ public class ShortestPathTCPTest {
     }
 
     @Test
-    public void test_size_9_against_sequential_using_distributed_bellman_ford() {
+    public void test_size_3_dense_against_sequential_using_distributed_bellman_ford() {
         Matrix currMatrix = null;
         try {
-            currMatrix = Matrix.parseAdjacencyMatrix("matrix1.txt");
+            currMatrix = Matrix.parseAdjacencyMatrix("3_node_dense.txt");
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
@@ -62,10 +62,10 @@ public class ShortestPathTCPTest {
     }
 
     @Test
-    public void test_size_16_against_sequential_using_distributed_bellman_ford() {
+    public void test_size_9_sparse_against_sequential_using_distributed_bellman_ford() {
         Matrix currMatrix = null;
         try {
-            currMatrix = Matrix.parseAdjacencyMatrix("matrix2.txt");
+            currMatrix = Matrix.parseAdjacencyMatrix("9_node_sparse.txt");
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
@@ -79,14 +79,207 @@ public class ShortestPathTCPTest {
     }
 
     @Test
-    public void test_size_25_against_sequential_using_distributed_bellman_ford() {
+    public void test_size_9_dense_against_sequential_using_distributed_bellman_ford() {
         Matrix currMatrix = null;
         try {
-            currMatrix = Matrix.parseAdjacencyMatrix("matrix3.txt");
+            currMatrix = Matrix.parseAdjacencyMatrix("9_node_dense.txt");
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_16_sparse_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("16_node_sparse.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_16_dense_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("16_node_dense.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_25_sparse_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("25_node_sparse.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_25_dense_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("25_node_dense.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_30_sparse_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("30_node_sparse.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_30_dense_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("30_node_dense.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_50_sparse_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("50_node_sparse.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_50_dense_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("50_node_dense.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_100_sparse_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("100_node_sparse.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_100_dense_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("100_node_dense.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void test_size_100_random_against_sequential_using_distributed_bellman_ford() {
+        Matrix currMatrix = null;
+        int n = 100;
+
+        int[][] matrix = new int[n][n];
+        Random random = new Random();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = random.nextInt(9) + 1;
+            }
+        }
+
+        currMatrix = new Matrix(matrix, matrix[0].length, matrix[0].length);
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
         int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);

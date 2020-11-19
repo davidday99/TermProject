@@ -42,14 +42,14 @@ public class TCPProcess implements Runnable{
             e.printStackTrace();
         }
 
+        // create a separate thread to handle all incoming connection requests
         Thread connectionHandler = new Thread(() -> {
-            int n = w.length;
-            for(int i = 0; i<n; i++) {
+            while (true) {
                 try {
                     Socket peer = server.accept();
 
+                    // for each new connection, create a separate thread to handle incoming messages from the process
                     Thread clientHandler = new Thread(() -> {
-                        String sender = peer.getInetAddress().getHostAddress();
                         String s;
                         DataInputStream dataInputStream;
                         try {
@@ -57,8 +57,8 @@ public class TCPProcess implements Runnable{
 
                             while ((s = dataInputStream.readUTF()) != null) {
                                 String[] nums = s.split(" ");
-                                int index = Integer.parseInt(nums[0]);
-                                int val = Integer.parseInt(nums[1]);
+                                int index = Integer.parseInt(nums[0]); // first integer is sender's process number, i
+                                int val = Integer.parseInt(nums[1]); // second integer is their value at G[i]
                                 G[index] = val;
                                 int ret = forbidden(me);
                                 if(ret != -1) {
@@ -74,8 +74,7 @@ public class TCPProcess implements Runnable{
                     clientHandler.start();
 
                 } catch (Exception e) {
-                    break;
-                    //e.printStackTrace();
+                    break; // if we reach this, the server is shutting down
                 }
             }
         });
@@ -83,9 +82,16 @@ public class TCPProcess implements Runnable{
         connectionHandler.start();
     }
 
+    /**
+     * Create a unidirectional communication channel from yourself to another process.
+     * @param ip IP address of the process you want to communicate with
+     * @param processNum unique number between 0 and n for a network of size n processes
+     * @param port port number of the process' server
+     * @return true if connection successful, else false
+     */
     public boolean addPeer(String ip, int processNum, int port) {
         try {
-            this.peers.put((Integer) processNum, new DataOutputStream(new Socket(ip, port).getOutputStream()));
+            this.peers.put(processNum, new DataOutputStream(new Socket(ip, port).getOutputStream()));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,9 +99,14 @@ public class TCPProcess implements Runnable{
         }
     }
 
+    /**
+     * Send a messagage to another process in the network.
+     * @param recipient process number to which message will be sent
+     * @param s UTF string message
+     * @return true if write successful, else false
+     */
     public boolean send(Integer recipient, String s) {
         try {
-            //System.out.println("Sender: " + me + ", Recipient: " + recipient + ", message: " + s);
             this.peers.get(recipient).writeUTF(s);
             messages++;
             return true;
@@ -105,6 +116,9 @@ public class TCPProcess implements Runnable{
         }
     }
 
+    /**
+     * Effectively shut down the server running on this process.
+     */
     public void closeSocket() {
         try {
             server.close();
@@ -121,12 +135,10 @@ public class TCPProcess implements Runnable{
     @Override
     public void run() {
         int ret;
-//        while(!evalPredicate()) {
-//            ret = forbidden(me);
-//            if(ret != -1) {  // if ret != -1 process is in a forbidden state and must advance
-//                advance(ret);
-//            }
-//        }
+
+        if (source == me) {
+            return;
+        }
         ret = forbidden(me);
         if(ret != -1) {
             advance(ret);
@@ -134,7 +146,7 @@ public class TCPProcess implements Runnable{
 
         while(!evalPredicate()) {}
 
-        //System.out.println("Process: " + me + ", G: " + Arrays.toString(G));
+        System.out.println("Process: " + me + ", G: " + Arrays.toString(G));
     }
 
     /**
