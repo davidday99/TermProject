@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Random;
 
 public class ShortestPathTCPTest {
@@ -38,7 +37,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -55,7 +54,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -72,7 +71,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -89,7 +88,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -106,7 +105,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -123,7 +122,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -140,7 +139,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -157,7 +156,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -174,7 +173,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -191,7 +190,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -208,7 +207,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -225,7 +224,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -242,7 +241,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -259,7 +258,7 @@ public class ShortestPathTCPTest {
         }
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
-        int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
         Assert.assertArrayEquals(expected, actual);
@@ -282,6 +281,26 @@ public class ShortestPathTCPTest {
         currMatrix = new Matrix(matrix, matrix[0].length, matrix[0].length);
 
         int[] actual = distributed_bellman_ford_shortest_path(currMatrix, 0);
+        int[] expected = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
+        System.out.println(Arrays.toString(expected));
+        System.out.println(Arrays.toString(actual));
+        Assert.assertArrayEquals(expected, actual);
+    }
+
+    /**
+     * Used to verify correctness of our implemented sequential Bellman-Ford
+     */
+    @Test
+    public void testbellmanford_v_dijstkra() {
+        Matrix currMatrix = null;
+        try {
+            currMatrix = Matrix.parseAdjacencyMatrix("100_node_dense.txt");
+        }
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int[] actual = sequential_bellman_ford_shortest_path(currMatrix.matrix, 0, currMatrix.rows);
         int[] expected = dijkstra(currMatrix.matrix, 0, currMatrix.rows);
         System.out.println(Arrays.toString(expected));
         System.out.println(Arrays.toString(actual));
@@ -352,6 +371,41 @@ public class ShortestPathTCPTest {
         cleanup(proc);
 
         return distances;
+    }
+
+    /**
+     * Sequential Bellman-Ford Algorithm
+     * Slightly modified because the original paper made the assumption of strictly positive edge weights at first
+     * To keep in line with the paper, this Bellman-Ford was constructed under the same assumption
+     * @param graph
+     * @param src
+     * @param numVerticies
+     * @return minimized distance array from src to all verticies in graph
+     */
+    public int[] sequential_bellman_ford_shortest_path(int[][] graph, int src, int numVerticies) {
+        int dist[] = new int[numVerticies];
+        // initialization
+        for(int i = 0; i<numVerticies; i++) {
+            dist[i] = Integer.MAX_VALUE;
+        }
+        dist[src] = 0;
+
+        // relax edges
+        for(int i = 1; i<numVerticies; i++) {
+            for(int j = 0; j<graph.length; j++) {
+                for(int k = 0; k<graph[0].length; k++) {
+                    if(graph[j][k] > 0) {
+                        if(dist[j] != Integer.MAX_VALUE && dist[j] + graph[j][k] < dist[k]) {
+                            dist[k] = dist[j] + graph[j][k];
+                        }
+                    }
+                }
+            }
+        }
+
+        // we do not need to check for negative cycles because original paper was not concerned with negative edge weights when it came to bellman-ford
+
+        return dist;
     }
 
     /* everything below here is taken from geeksforgeeks
